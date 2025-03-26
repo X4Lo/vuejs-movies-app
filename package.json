@@ -13,7 +13,8 @@
     "@tailwindcss/vite": "^4.0.17",
     "movies-app": "file:",
     "todo-app": "file:",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
