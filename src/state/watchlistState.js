@@ -5,6 +5,10 @@ class WatchlistState {
         this.watchlist = this.loadWatchlist();
     }
 
+    getWatchlist() {
+        return this.watchlist;
+    }
+    
     loadWatchlist() {
         const storedWatchlist = localStorageService.get("watchlist");
         return Array.isArray(storedWatchlist) ? storedWatchlist : [];
@@ -16,6 +20,7 @@ class WatchlistState {
 
     addWatchlist(movie) {
         if (!this.isInWatchlist(movie.id)) {
+            movie.isInWatchlist = true;
             this.watchlist.push(movie);
             this.saveWatchlist();
         }

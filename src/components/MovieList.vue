@@ -1,12 +1,7 @@
 <template>
     <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-6">
-        <MovieCard 
-            v-for="movie in props.movies" 
-            :key="movie.id" 
-            :movie="movie"
-            @toggle-favorite="handleToggleFavorite(movie)"
-            @toggle-watchlist="handleToggleWatchlist(movie)"
-        />
+        <MovieCard v-for="movie in props.movies" :key="movie.id" :movie="movie"
+            @toggle-favorite="handleToggleFavorite(movie)" @toggle-watchlist="handleToggleWatchlist(movie)" />
     </div>
 </template>
 
@@ -20,13 +15,18 @@ const props = defineProps({
     },
 });
 
-console.log(props)
+// console.log(props)
+
+const emit = defineEmits(['card-change']);
+
 
 const handleToggleFavorite = (movie) => {
-    console.log('Toggle Favorite:', movie);
+    emit('card-change');
+    // console.log('Toggle Favorite:', movie);
 };
 
 const handleToggleWatchlist = (movie) => {
-    console.log('Toggle Watchlist:', movie);
+    emit('card-change');
+    // console.log('Toggle Watchlist:', movie);
 };
 </script>

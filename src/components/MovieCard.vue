@@ -45,15 +45,15 @@ const { movie } = defineProps({
 const emit = defineEmits(['toggle-favorite', 'toggle-watchlist']);
 
 const toggleFavorite = () => {
-    emit('toggle-favorite');
     favoriteState.toggleFavorite(movie);
     movie.isFavorit = favoriteState.isFavorite(movie.id);
+    emit('toggle-favorite');
 };
 
 const toggleWatchlist = () => {
-    emit('toggle-watchlist');
     watchlistState.toggleWatchlist(movie);
     movie.isInWatchlist = watchlistState.isInWatchlist(movie.id);
+    emit('toggle-watchlist');
 };
 </script>
 

@@ -5,6 +5,10 @@ class FavoriteState {
         this.favorites = this.loadFavorites();
     }
 
+    getFavorits() {
+        return this.favorites;
+    }
+
     loadFavorites() {
         const storedFavorites = localStorageService.get("favorits");
         return Array.isArray(storedFavorites) ? storedFavorites : [];
@@ -16,6 +20,7 @@ class FavoriteState {
 
     addFavorite(movie) {
         if (!this.isFavorite(movie.id)) {
+            movie.isFavorite = true;
             this.favorites.push(movie);
             this.saveFavorites();
         }
