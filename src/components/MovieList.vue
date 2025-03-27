@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-6 h-full">
         <MovieCard v-for="movie in props.movies" :key="movie.id" :movie="movie"
             @toggle-favorite="handleToggleFavorite(movie)" @toggle-watchlist="handleToggleWatchlist(movie)" />
     </div>
