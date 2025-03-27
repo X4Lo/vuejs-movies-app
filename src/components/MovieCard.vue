@@ -33,6 +33,7 @@
 <script setup>
 import { HeartIcon, BookmarkIcon } from '@heroicons/vue/24/solid';
 import { favoriteState } from '../state/favoriteState';
+import { watchlistState } from '../state/watchlistState';
 
 const { movie } = defineProps({
     movie: {
@@ -51,6 +52,8 @@ const toggleFavorite = () => {
 
 const toggleWatchlist = () => {
     emit('toggle-watchlist');
+    watchlistState.toggleWatchlist(movie);
+    movie.isInWatchlist = watchlistState.isInWatchlist(movie.id);
 };
 </script>
 
