@@ -6,10 +6,10 @@ import { watchlistState } from '../state/watchlistState';
 const API_KEY = 'a667a330eea5e68ce051215dc1034926';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-export async function fetchMovies() {
+export async function fetchMovies(page = 1) {
     try {
         const response = await axios.get(`${BASE_URL}/movie/popular`, {
-            params: { api_key: API_KEY },
+            params: { api_key: API_KEY, page: page },
         });
 
         const movies = await Promise.all(
