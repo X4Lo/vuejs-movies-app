@@ -32,8 +32,9 @@
 
 <script setup>
 import { HeartIcon, BookmarkIcon } from '@heroicons/vue/24/solid';
+import { favoriteState } from '../state/favoriteState';
 
-defineProps({
+const { movie } = defineProps({
     movie: {
         type: Object,
         required: true,
@@ -44,6 +45,8 @@ const emit = defineEmits(['toggle-favorite', 'toggle-watchlist']);
 
 const toggleFavorite = () => {
     emit('toggle-favorite');
+    favoriteState.toggleFavorite(movie);
+    movie.isFavorit = favoriteState.isFavorite(movie.id);
 };
 
 const toggleWatchlist = () => {
