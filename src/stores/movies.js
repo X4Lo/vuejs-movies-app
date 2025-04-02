@@ -1,43 +1,60 @@
 import { defineStore } from 'pinia';
 import { moviesStorage } from '../services/moviesStorage';
+import { collectionsStorage } from '../services/collectionsStorage';
 
 export const useMoviesStore = defineStore('movies', {
     state: () => ({
         movies: moviesStorage.getMovies(),
-        allLists: [
-            { id: 1, name: 'Favorites' },
-            { id: 2, name: 'Watch Later' },
-            { id: 3, name: 'Action Movies' },
-            { id: 4, name: 'Comedy Movies' },
-        ],
+        collections: collectionsStorage.getCollections(),
     }),
     actions: {
-        toggleFavorite(movieId) {
-            const movie = this.movies.find((m) => m.id == movieId);
-            if (movie) {
-                movie.isFavorit = !movie.isFavorit;
-                moviesStorage.saveMovies(this.movies);
+        toggleFavorite(movie) {
+            const oldMovie = this.movies.find((m) => m.id == movie.id);
+            if (oldMovie) {
+                oldMovie.isFavorit = !oldMovie.isFavorit;
+            } else {
+                movie.isFavorit = true;
+                this.movies.push(movie);
             }
+            moviesStorage.saveMovies(this.movies);
         },
-        toggleWatchlist(movieId) {
-            const movie = this.movies.find((m) => m.id === movieId);
-            if (movie) {
-                movie.isInWatchlist = !movie.isInWatchlist;
+        toggleWatchlist(movie) {
+            const oldMovie = this.movies.find((m) => m.id === movie.id);
+            if (oldMovie) {
+                oldMovie.isInWatchlist = !oldMovie.isInWatchlist;
+            } else {
+                movie.isInWatchlist = true;
+                this.movies.push(movie);
             }
+            moviesStorage.saveMovies(this.movies);
         },
-        updateMovieLists(movieId, newLists) {
-            const movie = this.movies.find((m) => m.id === movieId);
-            if (movie) {
-                movie.lists = newLists;
+        isMovieInCollection(movieId, collectionId) {
+            const collection = this.collections.find((c) => c.id === collectionId);
+
+            if (!collection) return false;
+
+            return collection.movies.includes(movieId);
+        },
+        toggleMovieInCollection(movieId, collectionId) {
+            const collection = this.collections.find((l) => l.id === collectionId);
+
+            if (collection.movies.includes(movieId)) {
+                collection.movies = collection.movies.filter(id => id != movieId);
+            } else {
+                collection.movies.push(movieId);
             }
+
+            collectionsStorage.saveCollections();
         },
-        addNewMovie(movie) {
-            this.movies.push({ ...movie, id: Date.now(), lists: [] });
+        addNewCollection(name) {
+            this.collections.push({ name: name, id: Date.now(), movies: [] });
+            collectionsStorage.saveCollections();
         },
     },
     getters: {
         getMovieById: (state) => (id) => state.movies.find((m) => m.id === id),
         favoriteMovies: (state) => state.movies.filter((m) => m.isFavorit),
         watchlistMovies: (state) => state.movies.filter((m) => m.isInWatchlist),
+        getCollections: (state) => state.collections,
     },
 });
