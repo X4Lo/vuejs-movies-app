@@ -6,24 +6,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { favoriteState } from '../state/favoriteState';
+import { onMounted, computed } from 'vue';
 import MovieList from '../components/MovieList.vue';
+import { useMoviesStore } from '../stores/movies';
 
-const movies = ref([]);
+const moviesStore = useMoviesStore();
+const movies = computed(() => moviesStore.favoriteMovies);
 
 onMounted(async () => {
-    loadFavorites();
 });
 
-function loadFavorites() {
-    const favorites = favoriteState.getFavorits();
-
-    movies.value = favorites;
-}
 function handleCardChange() {
-    // console.log("change")
-    loadFavorites();
 }
 </script>
 

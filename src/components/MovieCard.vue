@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-103 hover:shadow-lg">
+        class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-103 hover:shadow-lg h-full">
         <img v-if="movie.posterPath" :src="`https://image.tmdb.org/t/p/w500${movie.posterPath}`" :alt="movie.title"
             class="w-full object-cover aspect-[2/3]" />
 
@@ -23,6 +23,12 @@
                     @click="toggleWatchlist">
                     <BookmarkIcon :class="[movie.isInWatchlist ? 'text-blue-500' : 'text-white']" class="h-6 w-6" />
                 </button>
+
+                <button class="text-white p-2 rounded-full hover:bg-blue-600 transition-colors duration-200"
+                    @click="showListsDialog">
+                    <PlusIcon class="text-white h-6 w-6" />
+
+                </button>
             </div>
 
             <p class="text-sm text-white text-center mt-4 mx-3">{{ movie.overview }}</p>
@@ -31,9 +37,8 @@
 </template>
 
 <script setup>
-import { HeartIcon, BookmarkIcon } from '@heroicons/vue/24/solid';
-import { favoriteState } from '../state/favoriteState';
-import { watchlistState } from '../state/watchlistState';
+import { HeartIcon, BookmarkIcon, PlusIcon } from '@heroicons/vue/24/solid';
+import { useMoviesStore } from '../stores/movies';
 
 const { movie } = defineProps({
     movie: {
@@ -42,19 +47,26 @@ const { movie } = defineProps({
     },
 });
 
+const moviesStore = useMoviesStore();
 const emit = defineEmits(['toggle-favorite', 'toggle-watchlist']);
 
 const toggleFavorite = () => {
-    favoriteState.toggleFavorite(movie);
-    movie.isFavorit = favoriteState.isFavorite(movie.id);
+    // favoriteState.toggleFavorite(movie);
+    // movie.isFavorit = !movie.isFavorit;
+    moviesStore.toggleFavorite(movie.id)
     emit('toggle-favorite');
 };
 
 const toggleWatchlist = () => {
-    watchlistState.toggleWatchlist(movie);
-    movie.isInWatchlist = watchlistState.isInWatchlist(movie.id);
+    // watchlistState.toggleWatchlist(movie);
+    // movie.isInWatchlist = watchlistState.isInWatchlist(movie.id);
+    moviesStore.toggleWatchlist(movie.id)
     emit('toggle-watchlist');
 };
+
+const showListsDialog = () => {
+
+}
 </script>
 
 <style scoped>

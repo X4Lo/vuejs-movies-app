@@ -17,7 +17,7 @@
         <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
 
         <MovieList :movies="movies" />
-        <Pagination :maxPages="600" @pageChange="handlePageChange" />
+        <Pagination :maxPages="maxPages.value" @pageChange="handlePageChange" />
 
     </div>
 </template>
@@ -27,9 +27,12 @@ import { ref, onMounted } from 'vue';
 import { fetchMovies } from '../services/tmdbService';
 import MovieList from '../components/MovieList.vue';
 import Pagination from '../components/Pagination.vue';
+import { useMoviesStore } from '../stores/movies';
 
+const moviesStore = useMoviesStore();
 const movies = ref([]);
 const currentPage = ref(1);
+const maxPages = ref(1);
 const currentMediaType = ref('movie');
 
 onMounted(async () => {
@@ -38,24 +41,23 @@ onMounted(async () => {
 
 async function loadPage() {
     try {
-        const fetchedMovies = await fetchMovies(currentMediaType.value, currentPage.value);
+        const response = await fetchMovies(currentMediaType.value, currentPage.value, moviesStore);
 
-        movies.value = fetchedMovies.data;
-
-        console.log(movies.value)
+        movies.value = response.data;
+        maxPages.value = response.totalPages;
     } catch (error) {
         console.error('failed to load ', error);
     }
 }
 
-function handlePageChange(newPage) {
+const handlePageChange = (newPage) => {
     currentPage.value = newPage;
     loadPage();
 }
 
-function toggleMediaType() {
-    this.currentMediaType = this.currentMediaType === 'movie' ? 'tv' : 'movie';
-    this.currentPage = 1;
+const toggleMediaType = () => {
+    this.currentMediaType.value = this.currentMediaType.value === 'movie' ? 'tv' : 'movie';
+    this.currentPage.value = 1;
     loadPage();
 }
 </script>

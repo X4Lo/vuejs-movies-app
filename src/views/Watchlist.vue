@@ -6,24 +6,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { watchlistState } from '../state/watchlistState';
+import { onMounted, computed } from 'vue';
 import MovieList from '../components/MovieList.vue';
+import { useMoviesStore } from '../stores/movies';
 
-const movies = ref([]);
+const moviesStore = useMoviesStore();
+const movies = computed(() => moviesStore.watchlistMovies);
 
 onMounted(async () => {
-    loadWatchlist();
 });
 
-function loadWatchlist() {
-    const watchlist = watchlistState.getWatchlist();
 
-    movies.value = watchlist;
-}
 function handleCardChange() {
-    // console.log("change")
-    loadWatchlist();
 }
 </script>
 
