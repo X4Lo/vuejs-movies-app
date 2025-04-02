@@ -24,20 +24,23 @@
                     <BookmarkIcon :class="[movie.isInWatchlist ? 'text-blue-500' : 'text-white']" class="h-6 w-6" />
                 </button>
 
-                <button class="text-white p-2 rounded-full hover:bg-blue-600 transition-colors duration-200"
-                    @click="showListsDialog">
-                    <PlusIcon class="text-white h-6 w-6" />
-
+                <button ref="popoverButton"
+                    class="text-white p-2 rounded-full hover:bg-green-600 transition-colors duration-200"
+                    @click.stop="togglePopover">
+                    <PlusIcon class="h-6 w-6" />
                 </button>
             </div>
 
             <p class="text-sm text-white text-center mt-4 mx-3">{{ movie.overview }}</p>
+            <Popover v-if="isPopoverVisible" :collections="collections" :movie-id="movie.id" @close="closePopover" />
         </div>
     </div>
 </template>
 
 <script setup>
+import Popover from './Popover.vue';
 import { HeartIcon, BookmarkIcon, PlusIcon } from '@heroicons/vue/24/solid';
+import { ref, computed, onMounted, nextTick, createApp } from 'vue';
 import { useMoviesStore } from '../stores/movies';
 
 const { movie } = defineProps({
@@ -48,25 +51,64 @@ const { movie } = defineProps({
 });
 
 const moviesStore = useMoviesStore();
+const collections = computed(() => moviesStore.collections);
+
 const emit = defineEmits(['toggle-favorite', 'toggle-watchlist']);
 
+const isPopoverVisible = ref(false);
+const popoverPosition = ref({ top: 0, left: 0 });
+
+const popoverButton = ref(null);
+
+const togglePopover = async () => {
+    if (isPopoverVisible.value) {
+        closePopover();
+        return;
+    }
+
+    await nextTick(); 
+    const buttonRect = popoverButton.value.getBoundingClientRect();
+    popoverPosition.value = {
+        top: buttonRect.bottom + window.scrollY,
+        left: buttonRect.left + window.scrollX,
+    };
+
+    isPopoverVisible.value = true;
+
+    const popoverContainer = document.getElementById('popover-container');
+    if (popoverContainer) {
+        popoverContainer.innerHTML = '';
+        
+        const app = createApp(Popover, {
+            collections: collections.value,
+            movieId: movie.id,
+            top: popoverPosition.value.top,
+            left: popoverPosition.value.left,
+            visible: true,
+            onClose: closePopover,
+        });
+        app.mount(popoverContainer);
+    }
+};
+
+const closePopover = () => {
+    isPopoverVisible.value = false;
+
+    const popoverContainer = document.getElementById('popover-container');
+    if (popoverContainer) {
+        popoverContainer.innerHTML = '';
+    }
+};
+
 const toggleFavorite = () => {
-    // favoriteState.toggleFavorite(movie);
-    // movie.isFavorit = !movie.isFavorit;
-    moviesStore.toggleFavorite(movie.id)
+    moviesStore.toggleFavorite(movie)
     emit('toggle-favorite');
 };
 
 const toggleWatchlist = () => {
-    // watchlistState.toggleWatchlist(movie);
-    // movie.isInWatchlist = watchlistState.isInWatchlist(movie.id);
-    moviesStore.toggleWatchlist(movie.id)
+    moviesStore.toggleWatchlist(movie)
     emit('toggle-watchlist');
 };
-
-const showListsDialog = () => {
-
-}
 </script>
 
 <style scoped>
