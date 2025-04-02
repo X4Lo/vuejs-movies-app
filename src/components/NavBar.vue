@@ -25,6 +25,11 @@
                                 <router-link to="/watchlist">Watchlist</router-link>
                             </a>
                         </li>
+                        <li>
+                            <a class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded">
+                                <router-link to="/collections">Collections</router-link>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
