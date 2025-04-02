@@ -15,9 +15,10 @@
 
         <div v-if="loading" class="text-center text-gray-500">Loading...</div>
         <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
+        <Pagination :maxPages="maxPages" @pageChange="handlePageChange" class="pb-5" />
 
         <MovieList :movies="movies" />
-        <Pagination :maxPages="maxPages.value" @pageChange="handlePageChange" />
+        <Pagination :maxPages="maxPages" @pageChange="handlePageChange" />
 
     </div>
 </template>
@@ -56,8 +57,8 @@ const handlePageChange = (newPage) => {
 }
 
 const toggleMediaType = () => {
-    this.currentMediaType.value = this.currentMediaType.value === 'movie' ? 'tv' : 'movie';
-    this.currentPage.value = 1;
+    currentMediaType.value = currentMediaType.value === 'movie' ? 'tv' : 'movie';
+    currentPage.value = 1;
     loadPage();
 }
 </script>

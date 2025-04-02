@@ -2,7 +2,7 @@
     <div class="flex items-center justify-center space-x-2 mt-3">
         <!-- previous -->
         <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-300 transition">
+            class="px-4 py-2 bg-gray-200 text-gray-700 cursor-pointer rounded disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-300 transition">
             Previous
         </button>
 
@@ -16,8 +16,8 @@
             <span v-if="showEllipsisBefore" class="text-gray-500">...</span>
 
             <!-- middle pages -->
-            <button v-for="page in visiblePages" :key="page" @click="changePage(page)"
-                :class="getPageButtonClass(page)">
+            <button v-for="page in visiblePages" :key="page" @click="changePage(page)" :class="getPageButtonClass(page)"
+                class="cursor-pointer">
                 {{ page }}
             </button>
 
@@ -25,14 +25,15 @@
             <span v-if="showEllipsisAfter" class="text-gray-500">...</span>
 
             <!-- last page -->
-            <button v-if="showLastPageButton" @click="changePage(maxPages)" :class="getPageButtonClass(maxPages)">
+            <button v-if="showLastPageButton" @click="changePage(maxPages)" :class="getPageButtonClass(maxPages)"
+                class="cursor-pointer">
                 {{ maxPages }}
             </button>
         </div>
 
         <!-- next -->
         <button :disabled="currentPage === maxPages" @click="changePage(currentPage + 1)"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-300 transition">
+            class="px-4 py-2 bg-gray-200 text-gray-700 cursor-pointer rounded disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-300 transition">
             Next
         </button>
     </div>
