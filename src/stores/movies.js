@@ -32,11 +32,15 @@ export const useMoviesStore = defineStore('movies', {
             const collection = this.collections.find((c) => c.id === collectionId);
 
             if (!collection) return false;
+            if (!collection.movies) return false;
 
             return collection.movies.includes(movieId);
         },
         toggleMovieInCollection(movieId, collectionId) {
             const collection = this.collections.find((l) => l.id === collectionId);
+
+            if (!collection.movies)
+                collection.movies = []
 
             if (collection.movies.includes(movieId)) {
                 collection.movies = collection.movies.filter(id => id != movieId);
@@ -50,6 +54,15 @@ export const useMoviesStore = defineStore('movies', {
             this.collections.push({ name: name, id: Date.now(), movies: [] });
             collectionsStorage.saveCollections();
         },
+        reorderCollectionMovies(id, newOrder) {
+            const collection = this.collections.find((l) => l.id === id);
+
+            // console.log(`old order: ${collection.movies}`)
+            // console.log(`new order: ${newOrder}`)
+            collection.movies = newOrder;
+            // console.log(`fix order: ${collection.movies}`)
+            collectionsStorage.saveCollections();
+        }
     },
     getters: {
         getMovieById: (state) => (id) => state.movies.find((m) => m.id === id),

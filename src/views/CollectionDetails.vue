@@ -10,7 +10,7 @@
             </div> -->
         </div>
 
-        <MovieList :movies="collectionMovies" />
+        <MovieList :movies="collectionMovies" :reorderable="true" @reorder="handleReorder" />
     </div>
 </template>
 
@@ -31,10 +31,12 @@ const props = defineProps({
 });
 
 onMounted(async () => {
-    console.log(props.id)
     collection.value = moviesStore.getCollectionById(props.id);
-    console.log(collection.value)
     collectionMovies.value = moviesStore.getCollectionMovies(props.id);
 });
 
+const handleReorder = (newOrder) => {
+    const ids = newOrder.map(m => m.id);
+    moviesStore.reorderCollectionMovies(props.id, ids);
+};
 </script>
