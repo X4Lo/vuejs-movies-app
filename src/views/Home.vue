@@ -13,10 +13,9 @@
             </div>
         </div>
 
+        <Pagination :maxPages="maxPages" @pageChange="handlePageChange" class="pb-5" />
         <div v-if="loading" class="text-center text-gray-500">Loading...</div>
         <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
-        <Pagination :maxPages="maxPages" @pageChange="handlePageChange" class="pb-5" />
-
         <MovieList :movies="movies" />
         <Pagination :maxPages="maxPages" @pageChange="handlePageChange" />
 
@@ -35,6 +34,7 @@ const movies = ref([]);
 const currentPage = ref(1);
 const maxPages = ref(1);
 const currentMediaType = ref('movie');
+const loading = ref(true);
 
 onMounted(async () => {
     loadPage();
@@ -42,18 +42,25 @@ onMounted(async () => {
 
 async function loadPage() {
     try {
+        loading.value = true;
+        movies.value = [];
+
         const response = await fetchMovies(currentMediaType.value, currentPage.value, moviesStore);
 
         movies.value = response.data;
         maxPages.value = response.totalPages;
     } catch (error) {
         console.error('failed to load ', error);
+    } finally {
+        loading.value = false;
     }
 }
 
 const handlePageChange = (newPage) => {
-    currentPage.value = newPage;
-    loadPage();
+    if (newPage != currentPage.value) {
+        currentPage.value = newPage;
+        loadPage();
+    }
 }
 
 const toggleMediaType = () => {
