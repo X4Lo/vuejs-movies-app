@@ -66,7 +66,7 @@ const togglePopover = async () => {
         return;
     }
 
-    await nextTick(); 
+    await nextTick();
     const buttonRect = popoverButton.value.getBoundingClientRect();
     popoverPosition.value = {
         top: buttonRect.bottom + window.scrollY,
@@ -78,7 +78,7 @@ const togglePopover = async () => {
     const popoverContainer = document.getElementById('popover-container');
     if (popoverContainer) {
         popoverContainer.innerHTML = '';
-        
+
         const app = createApp(Popover, {
             collections: collections.value,
             movieId: movie.id,

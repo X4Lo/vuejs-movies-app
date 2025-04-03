@@ -10,6 +10,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useMoviesStore } from '../stores/movies';
+import CollectionCard from '../components/CollectionCard.vue'
 
 const moviesStore = useMoviesStore();
 

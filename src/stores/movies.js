@@ -53,6 +53,12 @@ export const useMoviesStore = defineStore('movies', {
     },
     getters: {
         getMovieById: (state) => (id) => state.movies.find((m) => m.id === id),
+        getCollectionById: (state) => (id) => state.collections.find((c) => c.id == id),
+        getCollectionMovies: (state) => (id) => state.movies.filter((m) => {
+            const collection = state.getCollectionById(id);
+
+            return collection.movies.includes(m.id);
+        }),
         favoriteMovies: (state) => state.movies.filter((m) => m.isFavorit),
         watchlistMovies: (state) => state.movies.filter((m) => m.isInWatchlist),
         getCollections: (state) => state.collections,
