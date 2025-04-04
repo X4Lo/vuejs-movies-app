@@ -13,11 +13,30 @@ export async function fetchMovies(type = 'movie', page = 1, moviesStore) {
         const movies = await Promise.all(
             response.data.results.map(async (movieData) => {
                 const movie = moviesStore.getMovieById(movieData.id) || new Movie(movieData);
-                // console.log(movieData)
 
-                // movie.isTvSerie = (type == 'tv');
-                // movie.isFavorit = favoriteState.isFavorite(movie.id);
-                // movie.isInWatchlist = watchlistState.isInWatchlist(movie.id);
+                return movie;
+            })
+        );
+
+        return {
+            data: movies,
+            totalPages: response.data.total_pages
+        };
+    } catch (error) {
+        console.error('error fetching', error);
+        throw error;
+    }
+}
+
+export async function fetchMoviesByName(query, page = 1, moviesStore) {
+    try {
+        const response = await axios.get(`${BASE_URL}/search/multi?include_adult=false&language=en-US`, {
+            params: { api_key: API_KEY, page: page, query: query },
+        });
+
+        const movies = await Promise.all(
+            response.data.results.filter(i => !Object.hasOwn(i, 'gender')).map(async (movieData) => {
+                const movie = moviesStore.getMovieById(movieData.id) || new Movie(movieData);
 
                 return movie;
             })

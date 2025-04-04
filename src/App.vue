@@ -7,18 +7,13 @@ import NavBar from './components/NavBar.vue';
         <NavBar />
         <main>
             <router-view></router-view>
-            <div id="popover-container"></div>
-
+            <div id="popover-container" class="absolute top-0 left-0 pointer-events-none"></div>
         </main>
     </div>
 </template>
 
 <style>
 #popover-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 9999; /* Ensure it appears above other elements */
-  pointer-events: none; /* Allow clicks to pass through unless explicitly handled */
+    z-index: 9999;
 }
 </style>
